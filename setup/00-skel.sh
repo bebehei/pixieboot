@@ -11,6 +11,7 @@ config(){
 	#echo "  menu label Ubuntu 14.04 Desktop rescue"
 	#echo "  kernel     systems/$DISTRO_NAME/vmlinuz"
 	#echo "  append     netboot=nfs rootfstype=nfs4 root=/dev/nfs4 nfsroot=$NFSHOST:$BASE_SYSTEMS/$DISTRO_NAME/ initrd=$BASE_SYSTEMS_rel/$DISTRO_NAME/initrd.img ip=dhcp"
+	return 0
 }
 
 installation(){
