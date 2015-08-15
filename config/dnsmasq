@@ -1,0 +1,14 @@
+#/etc/dnsmasq.d/netboot 
+interface=eth0
+port=0
+dhcp-range=NFSPREFIX,proxy
+log-dhcp
+
+enable-tftp
+tftp-root=NFSPREFIX
+dhcp-boot=NFSPREFIX/pxelinux.0
+dhcp-option=17,NFSPREFIX/nfs
+dhcp-option=vendor:PXEClient,6,2b
+dhcp-no-override
+
+pxe-service=X86PC, "Network Boot Menu", /pxelinux
