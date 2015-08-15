@@ -8,16 +8,16 @@ function warn(){
 	echo $* >&2
 }
 
-NFSPREFIX=$(dirname $(readlink -f $0))
-BASE_SYSTEMS_rel=systems
-MIRROR=http://mirrors.kernel.org/ubuntu
+export NFSPREFIX=$(dirname $(readlink -f $0))
+export BASE_SYSTEMS_rel=systems
+export MIRROR=http://mirrors.kernel.org/ubuntu
 
 [[ -f config.sh ]] && source config.sh
 
 [[ -z "$NFSHOST" ]] && die variable NFSHOST not defined
 
-BASE_SYSTEMS=$NFSPREFIX/$BASE_SYSTEMS_rel
-CONFIG=$NFSPREFIX/pxelinux.cfg/default
+export BASE_SYSTEMS=$NFSPREFIX/$BASE_SYSTEMS_rel
+export CONFIG=$NFSPREFIX/pxelinux.cfg/default
 
 # dnsmasq configuration
 sed "s%NFSHOST%$NFSHOST%;s%NFSPREFIX%$NFSPREFIX%" $NFSPREFIX/config/dnsmasq >> /etc/dnsmasq.d/pxe

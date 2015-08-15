@@ -1,2 +1,2 @@
 # you're not allowed to use a DNSname
-NFSHOST=<ip>
+export NFSHOST=<ip>
