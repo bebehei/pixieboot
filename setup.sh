@@ -42,7 +42,7 @@ END
 # install all setups
 for setup in setup/*.sh; do
 	if [[ -x $setup ]]; then
-		#$setup install &
+		$setup install &
 		$setup config >> $CONFIG
 	fi
 done
