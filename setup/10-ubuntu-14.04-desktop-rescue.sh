@@ -22,12 +22,12 @@ installation(){
 	echo rescue > $BASE_SYSTEMS/$DISTRO_NAME/etc/hostname
 
 	chroot $BASE_SYSTEMS/$DISTRO_NAME localedef -i de_DE -c -f UTF-8 de_DE.UTF-8 
-	chroot $BASE_SYSTEMS/$DISTRO_NAME apt-get install linux-image-generic ubuntu-desktop vim
-	chroot $BASE_SYSTEMS/$DISTRO_NAME useradd -Um --home-dir /home/user --uid 1000  --password '$6$2ez0KCz3$uBocmB2dW46YyyZPYw78gxkkxWcsRvr3.3hcLujZcjipab8MM6TtQsFqurb7hlVkqCHKbuCKiGsc3OC/wUp/A/'
+	chroot $BASE_SYSTEMS/$DISTRO_NAME apt-get install -y linux-image-generic ubuntu-desktop vim
+	chroot $BASE_SYSTEMS/$DISTRO_NAME useradd -Um --home-dir /home/user --uid 1000  --password '$6$2ez0KCz3$uBocmB2dW46YyyZPYw78gxkkxWcsRvr3.3hcLujZcjipab8MM6TtQsFqurb7hlVkqCHKbuCKiGsc3OC/wUp/A/' user
 	chroot $BASE_SYSTEMS/$DISTRO_NAME usermod -aG adm,cdrom,sudo,plugdev,lpadmin user
-	chroot $BASE_SYSTEMS/$DISTRO_NAME sed 's/BOOT=local/BOOT=nfs/' /etc/initramfs-tools/initramfs.conf
+	chroot $BASE_SYSTEMS/$DISTRO_NAME sed -i 's/BOOT=local/BOOT=nfs/' /etc/initramfs-tools/initramfs.conf
 	chroot $BASE_SYSTEMS/$DISTRO_NAME update-initramfs -u
-	chroot $BASE_SYSTEMS/$DISTRO_NAME cat <<-END
+	cat > $BASE_SYSTEMS/$DISTRO_NAME/etc/network/interfaces <<-END
 	auto lo
 	iface lo inet loopback
 
