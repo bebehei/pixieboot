@@ -19,6 +19,8 @@ export MIRROR=http://mirrors.kernel.org/ubuntu
 export BASE_SYSTEMS=$NFSPREFIX/$BASE_SYSTEMS_rel
 export CONFIG=$NFSPREFIX/pxelinux.cfg/default
 
+export RECIPES=./recipes/
+
 # dnsmasq configuration
 sed "s%NFSHOST%$NFSHOST%;s%NFSPREFIX%$NFSPREFIX%" $NFSPREFIX/config/dnsmasq >> /etc/dnsmasq.d/pxe
 sed -i "s%#conf-dir=/etc/dnsmasq.d%conf-dir=/etc/dnsmasq.d%" /etc/dnsmasq.conf
@@ -40,10 +42,10 @@ cat > $CONFIG <<-END
 END
 
 # install all setups
-for setup in setup/*.sh; do
+for recipe in $RECIPEs/*.sh; do
 	if [[ -x $setup ]]; then
-		$setup install &
-		$setup config >> $CONFIG
+		$recipe install &
+		$recipe config >> $CONFIG
 	fi
 done
 wait
