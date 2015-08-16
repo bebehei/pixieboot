@@ -42,8 +42,8 @@ cat > $CONFIG <<-END
 END
 
 # install all setups
-for recipe in $RECIPEs/*.sh; do
-	if [[ -x $setup ]]; then
+for recipe in $RECIPES/*.sh; do
+	if [[ -x $recipe ]]; then
 		$recipe install &
 		$recipe config >> $CONFIG
 	fi

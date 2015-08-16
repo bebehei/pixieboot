@@ -1,6 +1,5 @@
 #/etc/dnsmasq.d/netboot 
 interface=eth0
-port=0
 dhcp-range=NFSPREFIX,proxy
 log-dhcp
 
@@ -12,3 +11,9 @@ dhcp-option=vendor:PXEClient,6,2b
 dhcp-no-override
 
 pxe-service=X86PC, "Network Boot Menu", /pxelinux
+
+# neccessary to not break DNS on the host
+port=53
+no-resolv
+server=8.8.8.8
+server=8.8.4.4
