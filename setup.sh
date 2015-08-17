@@ -22,7 +22,7 @@ export CONFIG=$NFSPREFIX/pxelinux.cfg/default
 export RECIPES=./recipes/
 
 # dnsmasq configuration
-sed "s%NFSHOST%$NFSHOST%;s%NFSPREFIX%$NFSPREFIX%" $NFSPREFIX/config/dnsmasq >> /etc/dnsmasq.d/pxe
+sed "s%NFSHOST%$NFSHOST%;s%NFSPREFIX%$NFSPREFIX%" $NFSPREFIX/config/dnsmasq > /etc/dnsmasq.d/pxe
 sed -i "s%#conf-dir=/etc/dnsmasq.d%conf-dir=/etc/dnsmasq.d%" /etc/dnsmasq.conf
 service dnsmasq restart
 
@@ -39,6 +39,13 @@ cat > $CONFIG <<-END
 #
 # look into $NFSPREFIX/setup/ and create there a new entry
 
+DEFAULT menu.c32
+ALLOWOPTIONS 0
+PROMPT 0
+TIMEOUT 0
+
+MENU TITLE BOOT OVER NETWORK
+
 END
 
 # install all setups
@@ -48,4 +55,5 @@ for recipe in $RECIPES/*.sh; do
 		$recipe config >> $CONFIG
 	fi
 done
+
 wait
