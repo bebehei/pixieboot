@@ -4,9 +4,9 @@ DISTRO_NAME=ubuntu-14.04.3-desktop-live
 
 config(){
 	echo "label $DISTRO_NAME"
-	echo "  menu label Ubuntu 14.04"
-	echo "  kernel     $DISTRO_NAME/casper/vmlinuz.efi"
-	echo "  append     boot=casper netboot=nfs nfsroot=$NFSHOST:$BASE_SYSTEMS/$DISTRO_NAME/ initrd=$DISTRO_NAME/casper/initrd.lz"
+	echo "  menu label Ubuntu 14.04 DesktopLive"
+	echo "  kernel     $BASE_SYSTEMS_rel/$DISTRO_NAME/casper/vmlinuz.efi"
+	echo "  append     boot=casper netboot=nfs nfsroot=$NFSHOST:$BASE_SYSTEMS/$DISTRO_NAME/ initrd=$BASE_SYSTEMS_rel/$DISTRO_NAME/casper/initrd.lz"
 }
 
 installation(){

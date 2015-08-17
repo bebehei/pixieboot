@@ -5,8 +5,8 @@ DISTRO_NAME=ubuntu-14.04-mini
 config(){
 	echo "label $DISTRO_NAME"
 	echo "  menu label Ubuntu 14.04 Mini"
-	echo "  kernel     $DISTRO_NAME/casper/vmlinuz.efi"
-	echo "  append     boot=casper netboot=nfs nfsroot=$NFSHOST:$BASE_SYSTEMS/$DISTRO_NAME/ initrd=$DISTRO_NAME/casper/initrd.lz"
+	echo "  kernel     $BASE_SYSTEMS_rel/$DISTRO_NAME/linux"
+	echo "  append     boot=casper netboot=nfs nfsroot=$NFSHOST:$BASE_SYSTEMS/$DISTRO_NAME/ initrd=$BASE_SYSTEMS_rel/$DISTRO_NAME/initrd.gz"
 }
 
 installation(){

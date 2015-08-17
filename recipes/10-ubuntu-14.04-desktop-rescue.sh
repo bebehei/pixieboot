@@ -5,7 +5,7 @@ DISTRO_NAME=ubuntu-14.04-desktop-rescue
 config(){
 	echo "label $DISTRO_NAME"
 	echo "  menu label Ubuntu 14.04 Desktop rescue"
-	echo "  kernel     systems/$DISTRO_NAME/vmlinuz"
+	echo "  kernel     $BASE_SYSTEMS_rel/$DISTRO_NAME/vmlinuz"
 	echo "  append     netboot=nfs rootfstype=nfs4 root=/dev/nfs4 nfsroot=$NFSHOST:$BASE_SYSTEMS/$DISTRO_NAME/ initrd=$BASE_SYSTEMS_rel/$DISTRO_NAME/initrd.img ip=dhcp"
 
 }
