@@ -22,9 +22,16 @@ export CONFIG=$NFSPREFIX/pxelinux.cfg/default
 export RECIPES=./recipes/
 
 # dnsmasq configuration
-sed "s%NFSHOST%$NFSHOST%;s%NFSPREFIX%$NFSPREFIX%" $NFSPREFIX/config/dnsmasq > /etc/dnsmasq.d/pxe
+HASH=sha1sum
+dnsmasq_pxe=/etc/dnsmasq.d/pxe
+hash_old=$($HASH $dnsmasq_pxe)
+sed "s%NFSHOST%$NFSHOST%;s%NFSPREFIX%$NFSPREFIX%" $NFSPREFIX/config/dnsmasq > $dnsmasq_pxe
+hash_new=$($HASH $dnsmasq_pxe)
 sed -i "s%#conf-dir=/etc/dnsmasq.d%conf-dir=/etc/dnsmasq.d%" /etc/dnsmasq.conf
-service dnsmasq restart
+if [[ "$hash_old" != "$hash_new" ]]; then
+	echo "dnsmasq's configuration file $dnsmasq_pxe changed"
+	service dnsmasq restart
+fi
 
 # grab other files
 cp /usr/lib/syslinux/pxelinux.0 /usr/lib/syslinux/menu.c32 $NFSPREFIX
