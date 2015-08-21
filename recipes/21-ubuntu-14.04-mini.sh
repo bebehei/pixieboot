@@ -7,11 +7,20 @@ config(){
 	echo "  menu label Ubuntu 14.04 Mini"
 	echo "  kernel     $BASE_SYSTEMS_rel/$DISTRO_NAME/linux"
 	echo "  append     boot=casper netboot=nfs nfsroot=$NFSHOST:$BASE_SYSTEMS/$DISTRO_NAME/ initrd=$BASE_SYSTEMS_rel/$DISTRO_NAME/initrd.gz"
+
+	echo "label $DISTRO_NAME-preseed-default"
+	echo "  menu label Install Ubuntu 14.04 ^Server"
+	echo "  kernel     $BASE_SYSTEMS_rel/$DISTRO_NAME/linux"
+	echo "  append     boot=casper netboot=nfs nfsroot=$NFSHOST:$BASE_SYSTEMS/$DISTRO_NAME/ initrd=$BASE_SYSTEMS_rel/$DISTRO_NAME/initrd.gz priority=critical interface=auto locale=en_US.UTF-8 preseed/url=tftp://$NFSHOST/preseeds/server.cfg"
+
+	echo "label $DISTRO_NAME-preseed-default"
+	echo "  menu label Install Ubuntu 14.04 ^Desktop"
+        echo "  kernel     $BASE_SYSTEMS_rel/$DISTRO_NAME/linux"
+	echo "  append     boot=casper netboot=nfs nfsroot=$NFSHOST:$BASE_SYSTEMS/$DISTRO_NAME/ initrd=$BASE_SYSTEMS_rel/$DISTRO_NAME/initrd.gz priority=critical interface=auto locale=en_US.UTF-8 preseed/url=tftp://$NFSHOST/preseeds/desktop.cfg"
+
 }
 
 installation(){
-	mkdir -p $BASE_SYSTEMS/$DISTRO_NAME
-
 	iso=$(mktemp)
 	dir=$(mktemp -d)
 	wget http://archive.ubuntu.com/ubuntu/dists/trusty/main/installer-amd64/current/images/netboot/mini.iso -O $iso

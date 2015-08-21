@@ -10,8 +10,6 @@ config(){
 }
 
 installation(){
-	mkdir -p $BASE_SYSTEMS/$DISTRO_NAME
-
 	iso=$(mktemp)
 	dir=$(mktemp -d)
 	wget ${MIRROR}-releases/14.04.3/ubuntu-14.04.3-desktop-amd64.iso -O $iso
