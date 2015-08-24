@@ -4,7 +4,7 @@ DISTRO_NAME=memtest
 
 config(){
 	echo "label $DISTRO_NAME"
-	echo "  menu label Memtest"
+	echo "  menu label ^Memtest"
 	echo "  kernel     $BASE_SYSTEMS_rel/$DISTRO_NAME/mt86plus"
 }
 

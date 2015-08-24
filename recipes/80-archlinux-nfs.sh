@@ -4,7 +4,7 @@ DISTRO_NAME=archlinux-nfs
 
 config(){
 	echo "label $DISTRO_NAME"
-	echo "  menu label ArchLinux NFS"
+	echo "  menu label ^ArchLinux NFS"
 	echo "  kernel     $BASE_SYSTEMS_rel/$DISTRO_NAME/root.x86_64/boot/vmlinuz-linux"
 	# we need the fall-back-image, cause we use different hardware. E.g. the network-card is not recognized on other computers with the normal image
 	echo "  append     nfsroot=$NFSHOST:$BASE_SYSTEMS/$DISTRO_NAME/root.x86_64/ initrd=$BASE_SYSTEMS_rel/$DISTRO_NAME/root.x86_64/boot/initramfs-linux-fallback.img ip=:::::eth0:dhcp"

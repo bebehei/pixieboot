@@ -4,7 +4,7 @@ DISTRO_NAME=ubuntu-14.04-mini
 
 config(){
 	echo "label $DISTRO_NAME"
-	echo "  menu label Ubuntu 14.04 Mini"
+	echo "  menu label Ubuntu 14.04 M^ini"
 	echo "  kernel     $BASE_SYSTEMS_rel/$DISTRO_NAME/linux"
 	echo "  append     boot=casper netboot=nfs nfsroot=$NFSHOST:$BASE_SYSTEMS/$DISTRO_NAME/ initrd=$BASE_SYSTEMS_rel/$DISTRO_NAME/initrd.gz"
 
