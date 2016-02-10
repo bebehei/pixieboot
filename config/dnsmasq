@@ -1,5 +1,5 @@
 #/etc/dnsmasq.d/netboot 
-interface=eth0
+interface=*
 dhcp-range=NFSHOST,proxy
 log-dhcp
 
