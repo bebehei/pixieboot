@@ -11,6 +11,7 @@ function warn(){
 export NFSPREFIX=$(dirname $(readlink -f $0))
 export BASE_SYSTEMS_rel=systems
 export MIRROR=http://mirrors.kernel.org/ubuntu
+export EXPORTS=/etc/exports
 
 [[ -f config.sh ]] && source config.sh
 
@@ -31,6 +32,12 @@ sed -i "s%#conf-dir=/etc/dnsmasq.d%conf-dir=/etc/dnsmasq.d%" /etc/dnsmasq.conf
 if [[ "$hash_old" != "$hash_new" ]]; then
 	echo "dnsmasq's configuration file $dnsmasq_pxe changed"
 	service dnsmasq restart
+fi
+
+# nfs configuration
+if ! grep -q "$NFSPREFIX $NFSHOST/25(ro,no_root_squash,sync,no_subtree_check)" $EXPORTS; then
+	echo "$NFSPREFIX $NFSHOST/25(ro,no_root_squash,sync,no_subtree_check)" >> $EXPORTS
+	service nfs-kernel-server restart || warn "Could not restart nfs-kernel-server. Please restart the nfs-kernel-server manually."
 fi
 
 # grab other files
