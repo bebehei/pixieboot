@@ -47,7 +47,7 @@ cat > $CONFIG <<-END
 # look into $NFSPREFIX/setup/ and create there a new entry
 
 DEFAULT menu.c32
-ALLOWOPTIONS 0
+ALLOWOPTIONS 1
 PROMPT 0
 TIMEOUT 0
 
