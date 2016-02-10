@@ -1,6 +1,6 @@
 #/etc/dnsmasq.d/netboot 
 interface=eth0
-dhcp-range=NFSPREFIX,proxy
+dhcp-range=NFSHOST,proxy
 log-dhcp
 
 enable-tftp
