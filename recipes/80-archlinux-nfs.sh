@@ -52,11 +52,11 @@ installation(){
 	echo LC_ALL=$_new_lc_all >> $mountpoint/etc/locale.conf
 
 	echo init
-	chr pacman-key --init
+	CONFIG= chr pacman-key --init
 	echo populate
-	chr pacman-key --populate archlinux
-	chr pacman -Sy
-	chr pacman -S --noconfirm --needed ${new_basepkg[@]}
+	CONFIG= chr pacman-key --populate archlinux
+	CONFIG= chr pacman -Sy
+	CONIFG= chr pacman -S --noconfirm --needed ${new_basepkg[@]}
 
 	#Edit $root/etc/mkinitcpio.conf and add nfsv4 to MODULES, net_nfs4 to HOOKS, and /usr/bin/mount.nfs4 to BINARIES
 	sed 's/nfsmount/mount.nfs4/' $mountpoint/usr/lib/initcpio/hooks/net > "$mountpoint/usr/lib/initcpio/hooks/net_nfs4"
