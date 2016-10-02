@@ -2,21 +2,21 @@
 
 RECIPE_BASE=$(dirname $0)
 DISTRO_ID=$(basename $RECIPE_BASE)
-DISTRO_NAME="Ubuntu 14.04 mini"
+DISTRO_NAME="Ubuntu 14.04"
 
 config(){
 	echo "label $DISTRO_ID"
-	echo "  menu label ^$DISTRO_NAME"
+	echo "  menu label Boot ^$DISTRO_NAME mini"
 	echo "  kernel     $BASE_SYSTEMS_rel/$DISTRO_ID/linux"
 	echo "  append     boot=casper netboot=nfs nfsroot=$NFSHOST:$BASE_SYSTEMS/$DISTRO_ID/ initrd=$BASE_SYSTEMS_rel/$DISTRO_ID/initrd.gz"
 
 	echo "label $DISTRO_ID-preseed-default"
-	echo "  menu label Install Ubuntu 14.04 ^Server"
+	echo "  menu label Install $DISTRO_NAME ^Server"
 	echo "  kernel     $BASE_SYSTEMS_rel/$DISTRO_ID/linux"
 	echo "  append     boot=casper netboot=nfs nfsroot=$NFSHOST:$BASE_SYSTEMS/$DISTRO_ID/ initrd=$BASE_SYSTEMS_rel/$DISTRO_ID/initrd.gz priority=critical interface=auto locale=en_US.UTF-8 preseed/url=tftp://$NFSHOST/$BASE_SYSTEMS_rel/$DISTRO_ID/preseeds/server.cfg"
 
 	echo "label $DISTRO_ID-preseed-default"
-	echo "  menu label Install Ubuntu 14.04 ^Desktop"
+	echo "  menu label Install $DISTRO_NAME ^Desktop"
         echo "  kernel     $BASE_SYSTEMS_rel/$DISTRO_ID/linux"
 	echo "  append     boot=casper netboot=nfs nfsroot=$NFSHOST:$BASE_SYSTEMS/$DISTRO_ID/ initrd=$BASE_SYSTEMS_rel/$DISTRO_ID/initrd.gz priority=critical interface=auto locale=en_US.UTF-8 preseed/url=tftp://$NFSHOST/$BASE_SYSTEMS_rel/$DISTRO_ID/preseeds/desktop.cfg"
 
