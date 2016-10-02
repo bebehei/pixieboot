@@ -21,7 +21,7 @@ installation(){
 
 	echo rescue > $BASE_SYSTEMS/$DISTRO_NAME/etc/hostname
 
-	chroot $BASE_SYSTEMS/$DISTRO_NAME localedef -i de_DE -c -f UTF-8 de_DE.UTF-8 
+	chroot $BASE_SYSTEMS/$DISTRO_NAME localedef -i de_DE -c -f UTF-8 de_DE.UTF-8
 	chroot $BASE_SYSTEMS/$DISTRO_NAME locale-gen de_DE.UTF-8
 	chroot $BASE_SYSTEMS/$DISTRO_NAME locale-gen en_US.UTF-8
 
