@@ -8,7 +8,7 @@ function warn(){ echo $* >&2; }
 [ -f "$BASE/config.sh" ] && source "$BASE/config.sh"
 [ -z "$NFSHOST" ] && die variable NFSHOST not defined
 
-export NFSPREFIX=${NFSPREFIX:-$BASE}
+export NFSPREFIX=${NFSPREFIX:-$BASE/pixie}
 export BASE_SYSTEMS_rel=systems
 export MIRROR=${MIRROR:-http://mirrors.kernel.org/ubuntu}
 
