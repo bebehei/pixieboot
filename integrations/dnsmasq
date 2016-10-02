@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+dnsmasq_conf=/etc/dnsmasq.conf
+FILE_DNSMASQ_CONFIG=${FILE_DNSMASQ_CONFIG:-/etc/dnsmasq.d/pixieboot.conf}
+CMD_RELOAD_DNSMASQ=${CMD_RELOAD_DNSMASQ:-"service dnsmasq restart"}
+
+function die(){  warn $*; exit 1; }
+function warn(){ echo $* >&2; }
+
+checksum(){
+	sha1sum $* 2>/dev/null
+}
+
+checksum_old=$(checksum $FILE_DNSMASQ_CONFIG)
+checksum_old_dnsmasq=$(checksum $dnsmasq_conf)
+
+# enable config-dir option in dnsmasq.d
+if ! grep -q "^\\s*conf-dir=$(dirname $FILE_DNSMASQ_CONFIG)" $dnsmasq_conf; then
+	echo "conf-dir=$(dirname $FILE_DNSMASQ_CONFIG)" >> $dnsmasq_conf
+fi
+
+mkdir -p $(dirname $FILE_DNSMASQ_CONFIG)
+cat > $FILE_DNSMASQ_CONFIG <<-END
+# PXE Boot for dnsmasq
+interface=*
+dhcp-range=$NFSHOST,proxy
+log-dhcp
+
+enable-tftp
+tftp-root=$NFSPREFIX
+dhcp-boot=$NFSPREFIX/pxelinux.0
+dhcp-option=17,$NFSPREFIX/nfs
+dhcp-option=vendor:PXEClient,6,2b
+dhcp-no-override
+
+pxe-service=X86PC, "Network Boot Menu", /pxelinux
+
+# neccessary to not break DNS on the host
+port=53
+no-resolv
+server=8.8.8.8
+server=8.8.4.4
+END
+
+checksum_new=$(checksum $FILE_DNSMASQ_CONFIG)
+checksum_new_dnsmasq=$(checksum $dnsmasq_conf)
+
+# Reload dnsmasq if neccessary
+if [ "$checksum_old" != "$checksum_new" -o "$checksum_old_dnsmasq" != "$checksum_new_dnsmasq" ]; then
+	echo "dnsmasq's configuration changed. Reloading."
+	$CMD_RELOAD_DNSMASQ
+fi
