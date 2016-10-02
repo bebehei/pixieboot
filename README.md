@@ -39,7 +39,6 @@ as root. This might seem spooky, but it only does:
 
 <dl>
   <dt>integrations</dt><dd>scripts to integrate services to use pixieboot</dd>
-  <dt>preseeds</dt><dd>Extra files for debian-based installations</dd>
   <dt>recipes</dt><dd>the actual scripts, installing the systems</dd>
   <dt>systems</dt><dd>filesystem-roots of all bootable systems</dd>
 </dl>
