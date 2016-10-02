@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
-DISTRO_NAME=localhdd1
+RECIPE_BASE=$(dirname $0)
+DISTRO_ID=$(basename $RECIPE_BASE)
+DISTRO_NAME="HDD Local"
 
 config(){
-	echo "label $DISTRO_NAME"
-	echo "  menu label Local ^HDD"
+	echo "label $DISTRO_ID"
+	echo "  menu label ^$DISTRO_NAME"
 	echo "  localboot 0"
 }
 
@@ -12,7 +14,7 @@ installation(){
 	return 0
 }
 
-if [[ ! -d $BASE_SYSTEMS/$DISTRO_NAME && -n "$1" && "x$1" == "xinstall" ]]; then
+if [[ ! -d $BASE_SYSTEMS/$DISTRO_ID && -n "$1" && "x$1" == "xinstall" ]]; then
 	installation
 fi
 
