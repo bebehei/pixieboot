@@ -34,17 +34,17 @@ step_integrate(){
 }
 
 step_system_install(){
-	local systems=$(ls $DIR_RECIPES | xargs basename -a -s .sh)
+	local systems=$(ls $DIR_RECIPES)
 	[ -n "$SYSTEMS_ENABLED" ] && systems="$SYSTEMS_ENABLED"
 
 	for system in $systems; do
-		[ -x "$DIR_RECIPES/$system.sh" ] && $DIR_RECIPES/$system.sh install >$BASE_SYSTEMS/$system-install.log 2>&1 &
+		[ -x "$DIR_RECIPES/$system/recipe" ] && $DIR_RECIPES/$system/recipe install >$BASE_SYSTEMS/$system-install.log 2>&1 &
 	done
 	wait
 }
 
 step_config_write(){
-	local systems=$(ls $DIR_RECIPES | xargs basename -a -s .sh)
+	local systems=$(ls $DIR_RECIPES)
 	[ -n "$SYSTEMS_ENABLED" ] && systems="$SYSTEMS_ENABLED"
 
 	mkdir -p $(dirname $CONFIG)
@@ -64,7 +64,7 @@ step_config_write(){
 	END
 
 	for system in $systems; do
-		[ -x "$DIR_RECIPES/$system.sh" ] && $DIR_RECIPES/$system.sh config >> $CONFIG
+		[ -x "$DIR_RECIPES/$system/recipe" ] && $DIR_RECIPES/$system/recipe config >> $CONFIG
 	done
 }
 

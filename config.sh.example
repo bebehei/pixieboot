@@ -13,7 +13,13 @@ export NFSHOST=<ip>
 
 # SYSTEMS
 #
-# If you don't define SYSTEMS_ENABLED, all available systems will get installed
+# This has to be a space-separated list of the system-folders in recipes/.
+#
+# If you don't define SYSTEMS_ENABLED, all available systems will get installed.
+#
+# If you want to enforce a special order of all systems in the PXELINUX.cfg file,
+# you have to push your special systems in this order here in the variable
+#
 #export SYSTEMS_ENABLED=
 
 # INTEGRATIONS
