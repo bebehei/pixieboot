@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+RECIPE_BASE=$(dirname $0)
+DISTRO_ID=$(basename $RECIPE_BASE)
+DISTRO_NAME="Ubuntu 16.04 LiveCD"
+
+config(){
+	echo "label $DISTRO_ID"
+	echo "  menu label ^$DISTRO_NAME"
+	echo "  kernel     $BASE_SYSTEMS_rel/$DISTRO_ID/casper/vmlinuz.efi"
+	echo "  append     boot=casper netboot=nfs nfsroot=$NFSHOST:$BASE_SYSTEMS/$DISTRO_ID/ initrd=$BASE_SYSTEMS_rel/$DISTRO_ID/casper/initrd.lz"
+}
+
+installation(){
+	iso=$(mktemp)
+	dir=$(mktemp -d)
+	wget ${MIRROR}-releases/16.04/ubuntu-16.04-desktop-amd64.iso -O $iso
+	mount $iso $dir
+	cp -r $dir $BASE_SYSTEMS/$DISTRO_ID
+	umount $dir
+	rmdir $dir
+	rm $iso
+}
+
+if [[ ! -d $BASE_SYSTEMS/$DISTRO_ID && -n "$1" && "x$1" == "xinstall" ]]; then
+	installation
+fi
+
+if [[ -n "$1" && "x$1" == "xconfig" ]]; then
+	config
+fi
