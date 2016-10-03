@@ -43,7 +43,7 @@ installation(){
 	iface lo inet loopback
 
 	auto eth0
-	iface eth0 inet manual
+	iface eth0 inet dhcp
 	END
 }
 
