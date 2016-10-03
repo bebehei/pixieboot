@@ -8,7 +8,7 @@ config(){
 	echo "label $DISTRO_ID"
 	echo "  menu label ^$DISTRO_NAME"
 	echo "  kernel     $BASE_SYSTEMS_rel/$DISTRO_ID/vmlinuz"
-	echo "  append     netboot=nfs rootfstype=nfs4 root=/dev/nfs4 nfsroot=$NFSHOST:$BASE_SYSTEMS/$DISTRO_ID/ initrd=$BASE_SYSTEMS_rel/$DISTRO_ID/initrd.img ip=dhcp"
+	echo "  append     netboot=nfs rootfstype=nfs root=/dev/nfs nfsroot=$NFSHOST:$BASE_SYSTEMS/$DISTRO_ID/ initrd=$BASE_SYSTEMS_rel/$DISTRO_ID/initrd.img ip=dhcp"
 
 }
 
@@ -44,6 +44,11 @@ installation(){
 
 	auto eth0
 	iface eth0 inet manual
+	END
+
+	cat  >> $BASE_SYSTEMS/$DISTRO_ID/etc/fstab <<-END
+	proc            /proc         proc   defaults       0      0
+	/dev/nfs        /             nfs    defaults       0      0
 	END
 }
 
