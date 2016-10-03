@@ -1,26 +1,28 @@
 #!/usr/bin/env bash
 
-DISTRO_NAME=archlinux-nfs
+RECIPE_BASE=$(dirname $0)
+DISTRO_ID=$(basename $RECIPE_BASE)
+DISTRO_NAME="ArchLinux NFS"
 
 config(){
-	echo "label $DISTRO_NAME"
-	echo "  menu label ^ArchLinux NFS"
-	echo "  kernel     $BASE_SYSTEMS_rel/$DISTRO_NAME/root.x86_64/boot/vmlinuz-linux"
+	echo "label $DISTRO_ID"
+	echo "  menu label ^$DISTRO_NAME"
+	echo "  kernel     $BASE_SYSTEMS_rel/$DISTRO_ID/root.x86_64/boot/vmlinuz-linux"
 	# we need the fall-back-image, cause we use different hardware. E.g. the network-card is not recognized on other computers with the normal image
-	echo "  append     nfsroot=$NFSHOST:$BASE_SYSTEMS/$DISTRO_NAME/root.x86_64/ initrd=$BASE_SYSTEMS_rel/$DISTRO_NAME/root.x86_64/boot/initramfs-linux-fallback.img ip=:::::eth0:dhcp"
+	echo "  append     nfsroot=$NFSHOST:$BASE_SYSTEMS/$DISTRO_ID/root.x86_64/ initrd=$BASE_SYSTEMS_rel/$DISTRO_ID/root.x86_64/boot/initramfs-linux-fallback.img ip=:::::eth0:dhcp"
 }
 
 installation(){
-	mkdir -p $BASE_SYSTEMS/$DISTRO_NAME
+	mkdir -p $BASE_SYSTEMS/$DISTRO_ID
 	# most things are taken from https://github.com/bebehei/archinstall/ (Benedikt Heine's repository to install archlinux easily)
 	new_lc_all=C
-	new_hostname=archlinux-rescue-nfs
+	new_hostname=$DISTRO_ID
 	new_basepkg=(base base-devel grub vim git openssh mkinitcpio-nfs-utils linux nfs-utils nfsidmap)
 	new_mirror='http://mirror.selfnet.de/archlinux/$repo/os/$arch'
 	new_tz="Europe/Berlin"
 
 	# static variables. edit, if neccessary
-	mountpoint=$BASE_SYSTEMS/$DISTRO_NAME/root.x86_64
+	mountpoint=$BASE_SYSTEMS/$DISTRO_ID/root.x86_64
 	#CHR=$mountpoint/bin/arch-chroot
 	CHR=chroot
 
@@ -38,7 +40,7 @@ installation(){
 		done
 	}
 
-	wget $(echo $new_mirror | sed 's%\$repo/os/\$arch%iso%')/$(date +%Y.%m.01)/archlinux-bootstrap-$(date +%Y.%m.01)-x86_64.tar.gz -O - | tar xz -C $BASE_SYSTEMS/$DISTRO_NAME
+	wget $(echo $new_mirror | sed 's%\$repo/os/\$arch%iso%')/$(date +%Y.%m.01)/archlinux-bootstrap-$(date +%Y.%m.01)-x86_64.tar.gz -O - | tar xz -C $BASE_SYSTEMS/$DISTRO_ID
 
 	# real script starts here
 	# set server to preferred mirror
@@ -78,7 +80,7 @@ installation(){
 	chr ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
 }
 
-if [[ ! -d $BASE_SYSTEMS/$DISTRO_NAME && -n "$1" && "x$1" == "xinstall" ]]; then
+if [[ ! -d $BASE_SYSTEMS/$DISTRO_ID && -n "$1" && "x$1" == "xinstall" ]]; then
 	installation
 fi
 

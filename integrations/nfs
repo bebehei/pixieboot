@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# TODO: netmask is hardcoded
+
+function die(){  warn $*; exit 1; }
+function warn(){ echo $* >&2; }
+
+checksum(){
+	sha1sum $* 2>/dev/null
+}
+
+FILE_NFS_EXPORTS=${FILE_NFS_EXPORTS:-/etc/exports.d/pixieboot.exports}
+CMD_RELOAD_EXPORTS=${CMD_RELOAD_EXPORTS:-"exportfs -a"}
+
+checksum_old=$(checksum $FILE_NFS_EXPORTS)
+
+# Check if we're writing in etc exports, so we shouldn't overwrite any settings
+if [ "/etc/exports" != "$FILE_NFS_EXPORTS" ]; then
+	mkdir -p $(dirname $FILE_NFS_EXPORTS)
+	echo "$NFSPREFIX $NFSHOST/24(ro,no_root_squash,sync,no_subtree_check)" > $FILE_NFS_EXPORTS
+else
+	if ! grep -q "^$NFSPREFIX" $FILE_NFS_EXPORTS; then
+		echo "$NFSPREFIX $NFSHOST/24(ro,no_root_squash,sync,no_subtree_check)" >> $FILE_NFS_EXPORTS
+	fi
+fi
+
+checksum_new=$(checksum $FILE_NFS_EXPORTS)
+
+if [[ "$checksum_old" != "$checksum_new" ]]; then
+	echo "dnsmasq's configuration changed. Reloading."
+	${CMD_RELOAD_EXPORTS} || warn "Reloading NFS exports failed."
+fi

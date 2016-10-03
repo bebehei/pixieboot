@@ -1,2 +1,36 @@
-# you're not allowed to use a DNSname
+# pixieboot configuration
+#
+# available variables:
+# - BASE: points always to the directory, where setup.sh is located
+#
+# NFSHOST is NECCESSARY variable!
+# limited by TFTP, you're not allowed to use a DNSname in NFSHOST
 export NFSHOST=<ip>
+
+# If you want to use a local mirror, change the mirror URL.
+#export MIRROR=http://mirrors.kernel.org/ubuntu
+#export NFSPREFIX=$BASE
+
+# SYSTEMS
+#
+# This has to be a space-separated list of the system-folders in recipes/.
+#
+# If you don't define SYSTEMS_ENABLED, all available systems will get installed.
+#
+# If you want to enforce a special order of all systems in the PXELINUX.cfg file,
+# you have to push your special systems in this order here in the variable
+#
+#export SYSTEMS_ENABLED=
+
+# INTEGRATIONS
+#
+## What to Enable?
+#export INTEGRATIONS_ENABLED="nfs dnsmasq"
+
+# NFS
+#export CMD_RELOAD_EXPORTS="exportfs -a"
+#export FILE_NFS_EXPORTS=/etc/exports.d/pixieboot.exports
+
+# dnsmasq
+#export CMD_RELOAD_DNSMASQ="service dnsmasq restart"
+#export FILE_DNSMASQ_CONFIG=/etc/dnsmasq.d/pixieboot.conf
