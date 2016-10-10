@@ -10,6 +10,11 @@ config(){
 	echo "  localboot 0"
 }
 
+config_ipxe(){
+	# Not neccessary as the installation has automatic BIOS-boot with the exit-feature
+	return 0
+}
+
 installation(){
 	return 0
 }
@@ -20,4 +25,7 @@ fi
 
 if [[ -n "$1" && "x$1" == "xconfig" ]]; then
 	config
+fi
+if [[ -n "$1" && "x$1" == "xconfig_ipxe" ]]; then
+	config_ipxe
 fi

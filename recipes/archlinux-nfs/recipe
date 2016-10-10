@@ -12,6 +12,19 @@ config(){
 	echo "  append     nfsroot=$NFSHOST:$BASE_SYSTEMS/$DISTRO_ID/root.x86_64/ initrd=$BASE_SYSTEMS_rel/$DISTRO_ID/root.x86_64/boot/initramfs-linux-fallback.img ip=:::::eth0:dhcp"
 }
 
+config_ipxe(){
+	cat <<-END
+	:menujump-$DISTRO_ID
+	item --key I $DISTRO_ID Boot $DISTRO_NAME
+	goto backjump-$DISTRO_ID
+
+	:$DISTRO_ID
+	kernel $BASEURL_HTTP/$BASE_SYSTEMS_rel/$DISTRO_ID/root.x86_64/boot/vmlinuz-linux nfsroot=$NFSHOST:$BASE_SYSTEMS/$DISTRO_ID/root.x86_64/ ip=:::::eth0:dhcp
+	initrd $BASEURL_HTTP/$BASE_SYSTEMS_rel/$DISTRO_ID/root.x86_64/boot/initramfs-linux-fallback.img
+	oot || goto failed
+	END
+}
+
 installation(){
 	mkdir -p $BASE_SYSTEMS/$DISTRO_ID
 	# most things are taken from https://github.com/bebehei/archinstall/ (Benedikt Heine's repository to install archlinux easily)
@@ -86,4 +99,7 @@ fi
 
 if [[ -n "$1" && "x$1" == "xconfig" ]]; then
 	config
+fi
+if [[ -n "$1" && "x$1" == "xconfig_ipxe" ]]; then
+	config_ipxe
 fi

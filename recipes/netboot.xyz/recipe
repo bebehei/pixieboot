@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+# copy this file for your new state
+
+RECIPE_BASE=$(dirname $0)
+DISTRO_ID=$(basename $RECIPE_BASE)
+DISTRO_NAME=netboot.xyz
+
+config(){
+	# not runnable on normal PXE
+	return 0
+}
+
+config_ipxe(){
+
+	# remove this line to enable ipxe
+	cat <<-END
+	# $DISTRO_NAME
+	:menujump-$DISTRO_ID
+	# without --menu XYZ you're adding the item to the main menu
+	item menu-$DISTRO_ID Boot different iso-images from internet (netboot.xyz) 
+	goto backjump-$DISTRO_ID
+
+	:$DISTRO_ID
+	chain --autofree https://boot.netboot.xyz || goto failed
+
+	END
+
+}
+
+installation(){
+	# always do this at first. When setup.sh is called again, it will detect, that this system is already installed and won't do the effort again.
+	mkdir -p $BASE_SYSTEMS/$DISTRO_ID
+}
+
+if [[ ! -d $BASE_SYSTEMS/$DISTRO_ID && -n "$1" && "x$1" == "xinstall" ]]; then
+	installation
+fi
+
+if [[ -n "$1" && "x$1" == "xconfig" ]]; then
+	config
+fi
+if [[ -n "$1" && "x$1" == "xconfig_ipxe" ]]; then
+	config_ipxe
+fi

@@ -28,13 +28,26 @@ log-dhcp
 
 enable-tftp
 tftp-root=$NFSPREFIX
-dhcp-boot=$NFSPREFIX/pxelinux.0
+$(
+if [ "$IPXE_ENABLED" != 0 ]; then
+	echo "# tag all requests with 175 (iPXE) option"
+	echo "dhcp-match=set:ipxe,175"
+	echo "dhcp-option=175,8:1:1"
+else
+	 echo "dhcp-boot=$NFSPREFIX/pxelinux.0"
+fi
+)
 dhcp-option=17,$NFSPREFIX/nfs
 dhcp-option=vendor:PXEClient,6,2b
 dhcp-no-override
-
-pxe-service=X86PC, "Network Boot Menu", /pxelinux
-
+$(
+if [ "$IPXE_ENABLED" != 0 ]; then
+	echo "pxe-service=tag:!ipxe,X86PC, "Network Boot", /undionly.kpxe"
+	echo "pxe-service=tag:ipxe,X86PC, "Network Boot", /bootstrap.ipxe"
+else
+	echo "pxe-service=X86PC, "Network Boot Menu", /pxelinux"
+fi
+)
 # neccessary to not break DNS on the host
 port=53
 no-resolv

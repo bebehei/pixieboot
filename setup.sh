@@ -13,16 +13,18 @@ export BASE_SYSTEMS_rel=systems
 export MIRROR=${MIRROR:-http://mirrors.kernel.org/ubuntu}
 
 export BASE_SYSTEMS=$NFSPREFIX/$BASE_SYSTEMS_rel
+export BASEURL_NFS=$NFSHOST:$NFSPREFIX
+export BASEURL_HTTP=http://$NFSHOST/
+
 export CONFIG=$NFSPREFIX/pxelinux.cfg/default
+export CONFIG_IPXE=bootstrap.ipxe.0
+export FILE_CONFIG_IPXE=$NFSPREFIX/$CONFIG_IPXE
 
 export DIR_RECIPES=${DIR_RECIPES:-$BASE/recipes/}
 export DIR_INTEGRATIONS=${DIR_INTEGRATIONS:-$BASE/integrations/}
 
 mkdir -p $BASE_SYSTEMS
 
-# grab other files
-# TODO: take to the right part, maybe integrations?
-cp /usr/lib/PXELINUX/pxelinux.0 /usr/lib/syslinux/modules/bios/menu.c32 $NFSPREFIX
 
 step_integrate(){
 	local integrations=$(ls $DIR_INTEGRATIONS)
@@ -68,18 +70,117 @@ step_config_write(){
 	done
 }
 
+step_config_write_iPXE(){
+	local systems=$(ls $DIR_RECIPES)
+	[ -n "$SYSTEMS_ENABLED" ] && systems="$SYSTEMS_ENABLED"
+
+	mkdir -p $(dirname $FILE_CONFIG_IPXE)
+	cat > $FILE_CONFIG_IPXE <<-END
+	#!ipxe
+	# Figure out if client is 64-bit capable
+	cpuid --ext 29 && set arch x64 || set arch x86
+	cpuid --ext 29 && set archl amd64 || set archl i386
+
+	###################### MAIN MENU ####################################
+
+	:start
+	menu --name ubu16 Ubuntu 16.04
+	menu --name ubu14 Ubuntu 14.04
+	menu --name iso Plain ISO Images
+	menu Main iPXE boot menu
+	item --gap --   ------------------------- Groups ------------------------------
+	item menu-ubu14 Show Ubuntu 14 Menu
+	item menu-ubu16 Show Ubuntu 16 Menu
+	item menu-iso   Show Plain ISO Images
+	item --gap --   ------------------------- Operating systems ------------------------------
+	$(
+	for system in $systems; do
+		echo "goto menujump-$system ||"
+		echo ":backjump-$system"
+	done
+	)
+	item --gap -- ------------------------- Advanced options -------------------------------
+	item --key c config       Configure settings
+	item shell                Drop to iPXE shell
+	item reboot               Reboot computer
+	item reload               Reload config
+	item
+	item --key x exit         Exit iPXE and continue BIOS boot
+
+	choose selected || goto cancel
+	goto \${selected} || goto failed
+
+	:reload
+	chain ${BASEURL_HTTP}${CONFIG_IPXE} || goto failed
+
+	:menu-iso
+	item --menu iso --key 0x08 back Back to top menu...
+	choose --menu iso selected || goto cancel
+	goto \${selected} || goto :menu-iso
+
+	:menu-ubu14
+	item --menu ubu14 --key 0x08 back Back to top menu...
+	choose --menu ubu14 selected || goto cancel
+	goto \${selected} || goto :menu-ubu14
+
+	:menu-ubu16
+	item --menu ubu16 --key 0x08 back Back to top menu...
+	choose --menu ubu16 selected || goto cancel
+	goto \${selected} || goto :menu-ubu16
+
+	:cancel
+	echo You cancelled the menu, dropping you to a shell
+
+	:shell
+	echo Type 'exit' to get the back to the menu
+	shell
+	goto start
+
+	:failed
+	echo Booting failed, dropping to shell
+	goto shell
+
+	:reboot
+	reboot
+
+	:exit
+	exit
+
+	:config
+	config
+	goto start
+
+	:back
+	goto start
+
+	############ MAIN MENU ITEMS ############
+	$(
+	for system in $systems; do
+		[ -x "$DIR_RECIPES/$system/recipe" ] && $DIR_RECIPES/$system/recipe config_ipxe
+	done
+	)
+
+	# Go to start if any of these scripts fail badly
+	goto :start
+	END
+
+}
+
 case "$1" in
 	"")
 		step_system_install
 		step_config_write
+		[ -n "$IPXE_ENABLED" ] && step_config_write_iPXE
 		step_integrate
 		;;
 	system-install)
 		step_system_install
 		step_config_write
+		[ -n "$IPXE_ENABLED" ] && step_config_write_iPXE
 		;;
 	config-write)
 		step_config_write
+		[ -n "$IPXE_ENABLED" ] && step_config_write_iPXE
 		;;
 	integrate)
 		step_integrate

@@ -16,6 +16,69 @@ config(){
 	return 0
 }
 
+config_ipxe(){
+
+	# remove this line to enable ipxe
+	cat >/dev/null <<-END
+	cat <<-END
+
+	# Do not remove
+	# :menujump-$DISTRO_ID
+
+	# without --menu XYZ you're adding the item to the main menu
+	item --key I menu-$DISTRO_ID Install $DISTRO_NAME
+
+	# there are special menues to group special entries
+	item --menu ubu14 $DISTRO_ID-desktop Install $DISTRO_NAME Desktop
+	item --menu ubu14 $DISTRO_ID-server  Install $DISTRO_NAME Server
+	item --menu ubu14 $DISTRO_ID-plain  Install $DISTRO_NAME
+	goto backjump-$DISTRO_ID
+
+	# Here you can write your own menu, you have to label it correctly
+	# and add an item to the main menu, which jumps here
+	:menu-$DISTRO_ID
+	menu Installation $DISTRO_NAME
+	item
+	item --key d $DISTRO_ID-desktop Install $DISTRO_NAME Desktop
+	item --key s $DISTRO_ID-server  Install $DISTRO_NAME Server
+	item
+	item --gap -- -------------------------  CONFIGURATION  -------------------------------
+	item --key h $DISTRO_ID-hostname Set hostname for fresh installation
+	item
+	item --gap -- -------------------------  SPECIAL  -------------------------------
+	item $DISTRO_ID-plain Run Plain installation without preseed
+	item
+	item --key 0x08 back Back to top menu...
+	choose selected && goto \${selected} || goto start
+
+
+	# add for every installaton type an entry with a special label
+	# the label has to be registered inside the main
+	:$DISTRO_ID-plain
+	kernel $BASEURL_HTTP/$BASE_SYSTEMS_rel/$DISTRO_ID/linux
+	goto $DISTRO_ID-boot
+
+	:$DISTRO_ID-desktop
+	kernel $BASEURL_HTTP/$BASE_SYSTEMS_rel/$DISTRO_ID/linux priority=critical interface=auto locale=en_US.UTF-8 preseed/url=$BASEURL_HTTP/$BASE_SYSTEMS_rel/$DISTRO_ID/preseeds/desktop.cfg \${hostparam}
+	goto $DISTRO_ID-boot
+
+	:$DISTRO_ID-server
+	kernel $BASEURL_HTTP/$BASE_SYSTEMS_rel/$DISTRO_ID/linux priority=critical interface=auto locale=en_US.UTF-8 preseed/url=$BASEURL_HTTP/$BASE_SYSTEMS_rel/$DISTRO_ID/preseeds/server.cfg \${hostparam}
+	goto $DISTRO_ID-boot
+
+	:$DISTRO_ID-boot
+	initrd $BASEURL_HTTP/$BASE_SYSTEMS_rel/$DISTRO_ID/initrd.gz
+	boot || goto failed
+
+	# Here you also can add an extra entry to add special command line arguments
+	:$DISTRO_ID-hostname
+	echo -n Please enter a hostname:
+	read hostname
+	set hostparam hostname=\${hostname}
+	goto menu-$DISTRO_ID
+	END
+}
+
 installation(){
 	# always do this at first. When setup.sh is called again, it will detect, that this system is already installed and won't do the effort again.
 	mkdir -p $BASE_SYSTEMS/$DISTRO_ID
@@ -27,4 +90,7 @@ fi
 
 if [[ -n "$1" && "x$1" == "xconfig" ]]; then
 	config
+fi
+if [[ -n "$1" && "x$1" == "xconfig_ipxe" ]]; then
+	config_ipxe
 fi

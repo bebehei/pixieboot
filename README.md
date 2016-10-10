@@ -4,8 +4,23 @@ Repository to bootstrap a PXE server easily. Get in a few steps a working setup 
 
 It's flexible and programmed modularly. It's easy to use it with existing setups.
 
-In its default configuration, it uses dnsmasq as DHCP-proxy and TFTP
-Server and NFS as fileserver for root filesystem of Linux.
+## Features 
+
+- dhcp proxy support
+  - You can install this in addition to your existing DHCP Server without conflict.
+- iPXE for native clients
+- iPXE via chainloading for older clients
+  - This supports downloading the kernel images via HTTP (way faster than TFTP)
+- Fully customizable
+  - via [`./config.sh`](./config.sh.example)
+  - via [extra integration modules](./integrations)
+
+### Software used
+
+- dnsmasq (tftp, dhcp proxy)
+- nfs-kernel-server (NFS Server)
+- nginx
+- iPXE and syslinux packages
 
 # Installation
 

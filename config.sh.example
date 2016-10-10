@@ -7,6 +7,16 @@
 # limited by TFTP, you're not allowed to use a DNSname in NFSHOST
 export NFSHOST=<ip>
 
+# iPXE
+#
+# iPXE is also available either via native boot or via chainloading of
+# undionly.kpxe. This enables every normal PXE computer to boot via iPXE.
+#
+# If you do not want to boot via (chainloaded) iPXE, disable it, by
+# setting it to 0. Everything else will get interpreted as enabled.
+#
+#export IPXE_ENABLED=1
+
 # If you want to use a local mirror, change the mirror URL.
 #export MIRROR=http://mirrors.kernel.org/ubuntu
 #export NFSPREFIX=$BASE
@@ -25,7 +35,10 @@ export NFSHOST=<ip>
 # INTEGRATIONS
 #
 ## What to Enable?
-#export INTEGRATIONS_ENABLED="nfs dnsmasq"
+#
+# If you don't define INTEGRATIONS_ENABLED, all available integrations will get installed.
+#
+#export INTEGRATIONS_ENABLED="nfs dnsmasq nginx pxebinaries"
 
 # NFS
 #export CMD_RELOAD_EXPORTS="exportfs -a"
@@ -34,3 +47,15 @@ export NFSHOST=<ip>
 # dnsmasq
 #export CMD_RELOAD_DNSMASQ="service dnsmasq restart"
 #export FILE_DNSMASQ_CONFIG=/etc/dnsmasq.d/pixieboot.conf
+
+# nginx
+#
+#export FILE_NGINX_CONFIG=/etc/nginx/sites-available/pixieboot.conf
+#export FILE_NGINX_CONFIGLINK=/etc/nginx/sites-enabled/pixieboot.conf
+#export CMD_RELOAD_NGINX="nginx -s reload"
+
+# PXE/iPXE
+#
+#export FILE_PXE_LINUX=/usr/lib/syslinux/pxelinux.0
+#export FILE_PXE_MENU=/usr/lib/syslinux/menu.c32
+#export FILE_PXE_UNDI=/usr/lib/ipxe/undionly.kpxe

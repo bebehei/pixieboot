@@ -22,6 +22,55 @@ config(){
 
 }
 
+config_ipxe(){
+
+	cat <<-END
+	:menujump-$DISTRO_ID
+	item --key I menu-$DISTRO_ID Install $DISTRO_NAME
+
+	item --menu ubu16 $DISTRO_ID-desktop Install $DISTRO_NAME Desktop
+	item --menu ubu16 $DISTRO_ID-server  Install $DISTRO_NAME Server
+	item --menu ubu16 $DISTRO_ID-plain  Install $DISTRO_NAME
+	goto backjump-$DISTRO_ID
+
+	:menu-$DISTRO_ID
+	menu Installation $DISTRO_NAME
+	item
+	item --key d $DISTRO_ID-desktop Install $DISTRO_NAME Desktop
+	item --key s $DISTRO_ID-server  Install $DISTRO_NAME Server
+	item
+	item --gap -- -------------------------  CONFIGURATION  -------------------------------
+	item --key h $DISTRO_ID-hostname Set hostname for fresh installation
+	item
+	item --gap -- -------------------------  SPECIAL  -------------------------------
+	item $DISTRO_ID-plain Run Plain installation without preseed
+	item
+	item --key 0x08 back Back to top menu...
+	choose selected && goto \${selected} || goto start
+
+	:$DISTRO_ID-plain
+	kernel $BASEURL_HTTP/$BASE_SYSTEMS_rel/$DISTRO_ID/linux
+	initrd $BASEURL_HTTP/$BASE_SYSTEMS_rel/$DISTRO_ID/initrd.gz
+	boot || goto failed
+
+	:$DISTRO_ID-desktop
+	kernel $BASEURL_HTTP/$BASE_SYSTEMS_rel/$DISTRO_ID/linux priority=critical interface=auto locale=en_US.UTF-8 preseed/url=$BASEURL_HTTP/$BASE_SYSTEMS_rel/$DISTRO_ID/preseeds/desktop.cfg \${hostparam}
+	initrd $BASEURL_HTTP/$BASE_SYSTEMS_rel/$DISTRO_ID/initrd.gz
+	boot || goto failed
+
+	:$DISTRO_ID-server
+	kernel $BASEURL_HTTP/$BASE_SYSTEMS_rel/$DISTRO_ID/linux priority=critical interface=auto locale=en_US.UTF-8 preseed/url=$BASEURL_HTTP/$BASE_SYSTEMS_rel/$DISTRO_ID/preseeds/server.cfg \${hostparam}
+	initrd $BASEURL_HTTP/$BASE_SYSTEMS_rel/$DISTRO_ID/initrd.gz
+	boot || goto failed
+
+	:$DISTRO_ID-hostname
+	echo -n Please enter a hostname:
+	read hostname
+	set hostparam hostname=\${hostname}
+	goto menu-$DISTRO_ID
+	END
+}
+
 installation(){
 	iso=$(mktemp)
 	dir=$(mktemp -d)
@@ -43,4 +92,7 @@ fi
 
 if [[ -n "$1" && "x$1" == "xconfig" ]]; then
 	config
+fi
+if [[ -n "$1" && "x$1" == "xconfig_ipxe" ]]; then
+	config_ipxe
 fi
