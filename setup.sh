@@ -170,17 +170,17 @@ case "$1" in
 	"")
 		step_system_install
 		step_config_write
-		[ -n "$IPXE_ENABLED" ] && step_config_write_iPXE
+		[ "$IPXE_ENABLED" != 0 ] && step_config_write_iPXE
 		step_integrate
 		;;
 	system-install)
 		step_system_install
 		step_config_write
-		[ -n "$IPXE_ENABLED" ] && step_config_write_iPXE
+		[ "$IPXE_ENABLED" != 0 ] && step_config_write_iPXE
 		;;
 	config-write)
 		step_config_write
-		[ -n "$IPXE_ENABLED" ] && step_config_write_iPXE
+		[ "$IPXE_ENABLED" != 0 ] && step_config_write_iPXE
 		;;
 	integrate)
 		step_integrate
