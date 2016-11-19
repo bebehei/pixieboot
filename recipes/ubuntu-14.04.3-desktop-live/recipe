@@ -35,13 +35,19 @@ installation(){
 	rm $iso
 }
 
-if [[ ! -d $BASE_SYSTEMS/$DISTRO_ID && -n "$1" && "x$1" == "xinstall" ]]; then
-	installation
-fi
+update(){
+	return
+}
 
-if [[ -n "$1" && "x$1" == "xconfig" ]]; then
-	config
-fi
-if [[ -n "$1" && "x$1" == "xconfig_ipxe" ]]; then
-	config_ipxe
-fi
+case "$1" in
+	install)
+		[[ ! -d $BASE_SYSTEMS/$DISTRO_ID ]] && installation
+		update
+		;;
+	config)
+		config
+		;;
+	config_ipxe)
+		config_ipxe
+		;;
+esac
