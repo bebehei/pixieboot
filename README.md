@@ -97,14 +97,17 @@ Most of the work, for adding new recipes, is just copy and paste.
    new integration.
 3. Execute `./setup.sh integrate`.
 
-# Docker Installation
+# Docker
 
-For best experience, simply forward the ports on the same ports as before and
-set NFSHOST to the IP-Address of your hostmachine.
+You have to use the docker host-network, as DHCP is not usable via port-forwarding.
 
-docker run \
-  -h pixieboot \
-  --name pixieboot \
-  --env NFSHOST=<EXTERNAL_IP_ADDRESS> \
-  -p 67:67/udp -p 80:80 \
-  bebehei/pixieboot:latest
+Also define the env-variable NFSHOST to match your local IP-Address. Additionally,
+you must not run a service on port 80, 67 or 53 on your host system.
+
+    docker run \
+      -h pixieboot \
+      --name pixieboot \
+      --env NFSHOST=<EXTERNAL_IP_ADDRESS> \
+      --net=host \
+      --detach \
+      bebehei/pixieboot:latest
