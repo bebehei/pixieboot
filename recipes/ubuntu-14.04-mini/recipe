@@ -71,14 +71,22 @@ config_ipxe(){
 
 }
 
+extract_iso(){
+	if command -v osirrox >/dev/null 2>&1; then
+		osirrox -indev $1 -extract / $2
+	else
+		dir=$(mktemp -d)
+		mount $1 $dir
+		cp -r $dir $2
+		umount $dir
+		rmdir $dir
+	fi
+}
+
 installation(){
 	iso=$(mktemp)
-	dir=$(mktemp -d)
 	wget http://archive.ubuntu.com/ubuntu/dists/trusty/main/installer-amd64/current/images/netboot/mini.iso -O $iso
-	mount $iso $dir
-	cp -r $dir $BASE_SYSTEMS/$DISTRO_ID
-	umount $dir
-	rmdir $dir
+	exctract_iso $iso $BASE_SYSTEMS/$DISTRO_ID
 	rm $iso
 }
 
