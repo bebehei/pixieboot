@@ -14,6 +14,7 @@ It's flexible and programmed modularly. It's easy to use it with existing setups
 - Fully customizable
   - via [`./config.sh`](./config.sh.example)
   - via [extra integration modules](./integrations)
+- installable via [docker](#docker)
 
 ### Software used
 
@@ -95,3 +96,15 @@ Most of the work, for adding new recipes, is just copy and paste.
 2. Change in `config.sh` the value of `INTEGRATIONS_ENABLED` to include your
    new integration.
 3. Execute `./setup.sh integrate`.
+
+# Docker Installation
+
+For best experience, simply forward the ports on the same ports as before and
+set NFSHOST to the IP-Address of your hostmachine.
+
+docker run \
+  -h pixieboot \
+  --name pixieboot \
+  --env NFSHOST=<EXTERNAL_IP_ADDRESS> \
+  -p 67:67/udp -p 80:80 \
+  bebehei/pixieboot:latest
