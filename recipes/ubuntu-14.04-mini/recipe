@@ -91,6 +91,7 @@ installation(){
 }
 
 update(){
+	export DISTRO_ID DISTRO_NAME
 	[ ! -d $BASE_SYSTEMS/$DISTRO_ID/preseeds ] && mkdir $BASE_SYSTEMS/$DISTRO_ID/preseeds
 	for seed in $RECIPE_BASE/preseeds/*; do
 		envsubst < $seed > $BASE_SYSTEMS/$DISTRO_ID/preseeds/$(basename $seed)
