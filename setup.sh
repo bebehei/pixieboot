@@ -115,17 +115,17 @@ step_config_write_iPXE(){
 
 	:menu-iso
 	item --menu iso --key 0x08 back Back to top menu...
-	choose --menu iso selected || goto cancel
+	choose --menu iso selected || goto start
 	goto \${selected} || goto :menu-iso
 
 	:menu-ubu14
 	item --menu ubu14 --key 0x08 back Back to top menu...
-	choose --menu ubu14 selected || goto cancel
+	choose --menu ubu14 selected || goto start
 	goto \${selected} || goto :menu-ubu14
 
 	:menu-ubu16
 	item --menu ubu16 --key 0x08 back Back to top menu...
-	choose --menu ubu16 selected || goto cancel
+	choose --menu ubu16 selected || goto start
 	goto \${selected} || goto :menu-ubu16
 
 	:cancel
