@@ -4,11 +4,11 @@
 
 FILE_PXE_LINUX=${FILE_PXE_LINUX:-/usr/lib/syslinux/pxelinux.0}
 FILE_PXE_MENU=${FILE_PXE_LINUX:-/usr/lib/syslinux/menu.c32}
-FILE_PXE_UNDI=${FILE_PXE_LINUX:-/usr/lib/ipxe/undionly.kpxe}
+FILE_PXE_UNDI=${FILE_PXE_LINUX:-/usr/lib/ipxe/undionly.kkpxe}
 
 cp $FILE_PXE_LINUX $NFSPREFIX/pxelinux.0
 cp $FILE_PXE_MENU  $NFSPREFIX/menu.c32
 
 if [ "$IPXE_ENABLED" != 0 ]; then
-	cp $FILE_PXE_UNDI  $NFSPREFIX/undionly.kpxe
+	cp $FILE_PXE_UNDI  $NFSPREFIX/undionly.kpxe.0
 fi
