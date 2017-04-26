@@ -12,7 +12,8 @@ ENV BASE=/srv/pixieboot \
     CMD_RELOAD_NGINX="true" \
     CMD_RELOAD_DNSMASQ="true"
 
-RUN apt-get update \
+RUN export DEBIAN_FRONTEND=noninteractive \
+  && apt-get update \
   && apt-get install -y \
     dnsmasq \
     gettext-base \
