@@ -6,6 +6,7 @@ ENV BASE=/srv/pixieboot \
     INTEGRATIONS_ENABLED="dnsmasq nginx pxebinaries" \
     SYSTEMS_ENABLED="ubuntu-16.04-mini ubuntu-14.04-mini netboot.xyz memtest local-harddrive" \
     FILE_PXE_LINUX=/usr/lib/PXELINUX/pxelinux.0 \
+    FILE_PXE_MENU=/usr/lib/syslinux/modules/bios/menu.c32 \
     FILE_DNSMASQ_CONFIG=/etc/dnsmasq.d/pixieboot.conf \
 # Set the reload commands to true, as normal service-commands would fail
 # and docker.sh is starting the services anyway
