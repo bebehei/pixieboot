@@ -34,4 +34,4 @@ RUN NFSHOST=127.0.0.1 ${BASE}/setup.sh
 
 EXPOSE 67/udp 80/tcp
 
-ENTRYPOINT ["${BASE}/docker.sh"]
+ENTRYPOINT ${BASE}/docker.sh
