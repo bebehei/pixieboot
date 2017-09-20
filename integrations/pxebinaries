@@ -5,10 +5,12 @@
 FILE_PXE_LINUX=${FILE_PXE_LINUX:-/usr/lib/syslinux/pxelinux.0}
 FILE_PXE_LDLINUX=${FILE_PXE_LDLINUX:-/usr/lib/syslinux/modules/bios/ldlinux.c32}
 FILE_PXE_MENU=${FILE_PXE_MENU:-/usr/lib/syslinux/menu.c32}
+FILE_PXE_UTIL=${FILE_PXE_UTIL:-/usr/lib/syslinux/modules/bios/libutil.c32}
 FILE_PXE_UNDI=${FILE_PXE_UNDI:-/usr/lib/ipxe/undionly.kkpxe}
 
 cp $FILE_PXE_LINUX   $NFSPREFIX/pxelinux.0
 cp $FILE_PXE_LDLINUX $NFSPREFIX/ldlinux.c32
+cp $FILE_PXE_UTIL    $NFSPREFIX/libutil.c32
 cp $FILE_PXE_MENU    $NFSPREFIX/menu.c32
 
 if [ "$IPXE_ENABLED" != 0 ]; then
